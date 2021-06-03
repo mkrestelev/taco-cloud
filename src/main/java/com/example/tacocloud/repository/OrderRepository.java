@@ -1,7 +1,8 @@
 package com.example.tacocloud.repository;
 
 import com.example.tacocloud.model.Ingredient;
+import com.example.tacocloud.model.Order;
 import org.springframework.data.repository.CrudRepository;
 
-public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
+public interface OrderRepository extends CrudRepository<Order, Long> {
 }

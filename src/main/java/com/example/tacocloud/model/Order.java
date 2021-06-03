@@ -1,15 +1,22 @@
 package com.example.tacocloud.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Order {
+@Entity
+@Table(name="Taco_Order")
+public class Order implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private Date createdAt;

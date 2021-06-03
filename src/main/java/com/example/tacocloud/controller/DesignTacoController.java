@@ -2,6 +2,7 @@ package com.example.tacocloud.controller;
 
 import com.example.tacocloud.model.Ingredient;
 import com.example.tacocloud.model.Ingredient.Type;
+import com.example.tacocloud.model.Order;
 import com.example.tacocloud.model.Taco;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.example.tacocloud.repository.IngredientRepository;
+import com.example.tacocloud.repository.TacoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,13 +32,19 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class DesignTacoController {
 
     private final IngredientRepository repository;
+    private final TacoRepository tacoRepository;
+
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
+    }
 
     @GetMapping
     public String showDesignForm(Model model) {
 
         List<Ingredient> ingredients = new ArrayList<>();
 
-        repository.findAll().forEach(i -> ingredients.add(i));
+        repository.findAll().forEach(ingredients::add);
 
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
@@ -47,7 +55,10 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors) {
+    public String processDesign(
+        @Valid @ModelAttribute("design") Taco design,
+        @ModelAttribute Order order,
+        Errors errors) {
 
         if (errors.hasErrors()) {
             return "design";
