@@ -4,13 +4,11 @@ import com.example.tacocloud.model.Ingredient;
 import com.example.tacocloud.model.Ingredient.Type;
 import com.example.tacocloud.model.Order;
 import com.example.tacocloud.model.Taco;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-
 import com.example.tacocloud.repository.IngredientRepository;
 import com.example.tacocloud.repository.TacoRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequiredArgsConstructor
 public class DesignTacoController {
 
-    private final IngredientRepository repository;
+    private final IngredientRepository ingredientRepository;
     private final TacoRepository tacoRepository;
 
     @ModelAttribute(name = "order")
@@ -44,29 +42,26 @@ public class DesignTacoController {
 
         List<Ingredient> ingredients = new ArrayList<>();
 
-        repository.findAll().forEach(ingredients::add);
+        ingredientRepository.findAll().forEach(ingredients::add);
 
-        Type[] types = Ingredient.Type.values();
-        for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), getIngredientsByType(ingredients, type));
-        }
+        Arrays.asList(Type.values()).forEach(type ->
+            model.addAttribute(type.toString().toLowerCase(), getIngredientsByType(ingredients, type)));
+
         model.addAttribute("design", new Taco());
         return "design";
     }
 
     @PostMapping
-    public String processDesign(
-        @Valid @ModelAttribute("design") Taco design,
-        @ModelAttribute Order order,
-        Errors errors) {
+    public String processDesign(@Valid @ModelAttribute("design") Taco design, @ModelAttribute Order order,
+            Errors errors) {
+
+        log.info("Processing taco: " + design);
 
         if (errors.hasErrors()) {
             return "design";
         }
 
-        // Save the taco design ...
-        // We'll do this in chapter 3
-        log.info("Processing taco: " + design);
+        tacoRepository.save(design);
 
         return "redirect:/orders/current";
     }

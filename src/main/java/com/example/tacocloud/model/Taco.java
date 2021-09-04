@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class Taco {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date createdAt;
@@ -28,9 +28,9 @@ public class Taco {
     private String name;
 
     @NotNull
-    @ManyToMany(targetEntity=Ingredient.class)
+    @ManyToMany(targetEntity = Ingredient.class)
     @Size(min = 1, message = "You must choose at least 1 ingredient")
-    private List<String> ingredients = new ArrayList<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
 
     @PrePersist
     void createdAt() {

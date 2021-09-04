@@ -3,6 +3,7 @@ package com.example.tacocloud.controller;
 import com.example.tacocloud.model.Order;
 import javax.validation.Valid;
 import com.example.tacocloud.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +15,11 @@ import org.springframework.web.bind.support.SessionStatus;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/current")
     public String orderForm(Model model) {
@@ -29,7 +31,7 @@ public class OrderController {
     public String processOrder(@Valid Order order, Errors errors, SessionStatus sessionStatus) {
 
         if (errors.hasErrors()) {
-            return "design";
+            return "orderForm";
         }
 
         log.info("Order submitted: " + order);
